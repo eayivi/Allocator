@@ -71,23 +71,23 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
-            cout << endl << "Checking block validity, standby..." ;
+            //cout << endl << "Checking block validity, standby..." ;
             int index = 0; // The beginning index of the open sentinel
             int open_sent_value, closing_sent_value;            
             while (index < N) {
                 assert (index>=0);
                 open_sent_value =  view(a[index]);
                 closing_sent_value =  view(a[index+ sizeof(int)  + abs(open_sent_value)]);
-                cout << endl << "opening_sentinel value is " << open_sent_value ;
-                cout << ", closing_sentinel value is " << closing_sent_value << endl; 
+                //cout << endl << "opening_sentinel value is " << open_sent_value ;
+                //cout << ", closing_sentinel value is " << closing_sent_value << endl; 
                 if (open_sent_value != closing_sent_value)
                     return false;
 
                 index = index + 2 * sizeof(int) + abs(open_sent_value); 
-                cout << "num _location is " << index;
+                //cout << "num _location is " << index;
 
             }
-            cout << endl << "$$Exiting valid() " << endl;
+            //cout << endl << "$$Exiting valid() " << endl;
             return true;}
 
         // ------------
@@ -146,8 +146,8 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
-          cout << endl << "$$$$$In allocate" << endl;
-          cout << "allocating " << n << " elements" << endl;
+          //cout << endl << "$$$$$In allocate" << endl;
+          //cout << "allocating " << n << " elements" << endl;
           int index = 0;
           int sentinel_value, space_needed;           
           space_needed = n * sizeof(value_type) + 2*sizeof(int);  // we need to fit a couple sentinels in new block
@@ -157,12 +157,12 @@ class Allocator {
                 
             if (sentinel_value >= space_needed) {   // found a spot
                 
-              cout << endl << "$$Found a spot at index " << index << " , which shows " << sentinel_value ;
-              cout << " available, we need " << space_needed << ", including sentinels" ;
+              //cout << endl << "$$Found a spot at index " << index << " , which shows " << sentinel_value ;
+              //cout << " available, we need " << space_needed << ", including sentinels" ;
               if (sentinel_value > space_needed) {  // Enough space leftover for a future block?
                  view(a[index+ sizeof(int) + sentinel_value]) -= space_needed ;  // set leftover space's end sentinel
                  view(a[index+ space_needed]) = view(a[index+ sizeof(int) + sentinel_value]); //set its beginning's sentinel 
-                 cout << endl << "There was more space than needed, so we set the next sentinels" << endl;
+                 //cout << endl << "There was more space than needed, so we set the next sentinels" << endl;
               }
                     
               view(a[index]) = -1 * n* sizeof (value_type);       //update the space found 
