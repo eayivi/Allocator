@@ -14,6 +14,7 @@
 #include <cassert> // assert
 #include <cstddef> // ptrdiff_t, size_t
 #include <new>     // new
+#include <cmath>    // abs
 using namespace std;
 // ---------
 // Allocator
@@ -70,23 +71,26 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
-			int index = 0; // The beginning index of the open sentinel
-			int open_sent_value, closing_sent_value;			
-			while (index < N) {
-				open_sent_value =  view(a[index]);
-				closing_sent_value =  view(a[index+ sizeof(int)  + open_sent_value]);
-				//cout << endl << "open sent value is " << open_sent_value ;
-				//cout << endl << "close sent value is " << closing_sent_value << endl; 
-				if (open_sent_value != closing_sent_value)
-					return false;
+            cout << endl << "Checking block validity, standby..." ;
+            int index = 0; // The beginning index of the open sentinel
+            int open_sent_value, closing_sent_value;            
+            while (index < N) {
+                assert (index>=0);
+                open_sent_value =  view(a[index]);
+                closing_sent_value =  view(a[index+ sizeof(int)  + abs(open_sent_value)]);
+                cout << endl << "opening_sentinel value is " << open_sent_value ;
+                cout << ", closing_sentinel value is " << closing_sent_value << endl; 
+                if (open_sent_value != closing_sent_value)
+                    return false;
 
-				index = index + 2 * sizeof(int) + open_sent_value; 
-				//cout << endl << "num _location is " << index;
+                index = index + 2 * sizeof(int) + abs(open_sent_value); 
+                cout << "num _location is " << index;
 
-			}
+            }
+            cout << endl << "$$Exiting valid() " << endl;
             return true;}
 
-		// ------------
+        // ------------
         // View 
         // ------------
 
@@ -96,11 +100,11 @@ class Allocator {
          * <your documentation>
          */
 
-		int& view (char& c) const {
-			return *reinterpret_cast<int*>(&c); }
-		
-		int view (const char& c) const {
-		return *reinterpret_cast<const int*>(&c); }
+        int& view (char& c) const {
+            return *reinterpret_cast<int*>(&c); }
+        
+        int view (const char& c) const {
+        return *reinterpret_cast<const int*>(&c); }
 
 
 
@@ -116,11 +120,11 @@ class Allocator {
          */
         Allocator () {
             // <your code>
-		    view(a[0]) = N- 2* sizeof(int);
-			view(a[N-sizeof(int)]) = N- 2* sizeof(int);
-			assert(valid());
-		}
-		
+            view(a[0]) = N- 2* sizeof(int);
+            view(a[N-sizeof(int)]) = N- 2* sizeof(int);
+            assert(valid());
+        }
+        
 
         // Default copy, destructor, and copy assignment
         // Allocator  (const Allocator&);
@@ -142,22 +146,34 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
-			/*
-			int index = 0;
-			int sentinel_value, space_needed;
-			while (index < N )  {	// lookup until the end of the array
-				sentinel_value = view(a[index]);
-				space_needed = n * sizeof(value_type) + 2*sizeof(int);  // sentinel size factor in the space needed
-				if (sentinel_value >= space_needed) {
-					view(a[index]) = -1 * n* sizeof (value_type);    
-					view(a[index + space_needed - sizeof(int)] = -1 * n * sizeof(value_type);
-					return &a[index];
-				}
-				index += 2* 
-			*/					          
+          cout << endl << "$$$$$In allocate" << endl;
+          cout << "allocating " << n << " elements" << endl;
+          int index = 0;
+          int sentinel_value, space_needed;           
+          space_needed = n * sizeof(value_type) + 2*sizeof(int);  // we need to fit a couple sentinels in new block
+            
+          while (index < N )  {   // looking up space until the end of the array
+            sentinel_value = view(a[index]);
+                
+            if (sentinel_value >= space_needed) {   // found a spot
 
-			assert(valid());
-            return 0;}                   // replace!
+              if (sentinel_value > (space_needed + (signed) 2 * sizeof(int))) {  // Enough space leftover for a future block?
+                 view(a[index+ sizeof(int) + sentinel_value]) -= space_needed ;  // set leftover space's end sentinel
+                 view(a[index+ space_needed]) = view(a[index+ sizeof(int) + sentinel_value]); //set its beginning's sentinel 
+              }
+                    
+              view(a[index]) = -1 * n* sizeof (value_type);       //update the space found 
+              view(a[index + space_needed - sizeof(int)]) = -1 * n * sizeof(value_type);
+
+              assert (valid());
+              return (pointer) &a[index+sizeof(int)];
+
+              }
+             index += 2*sizeof(int) + abs(sentinel_value);
+          }
+
+          assert(valid());
+          return 0;}                   // replace!
 
         // ---------
         // construct
