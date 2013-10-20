@@ -70,18 +70,18 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
-			int num_locations = 0; // The beginning index of the open sentinel
+			int index = 0; // The beginning index of the open sentinel
 			int open_sent_value, closing_sent_value;			
-			while (num_locations < N) {
-				open_sent_value =  view(a[num_locations]);
-				closing_sent_value =  view(a[num_locations+ sizeof(int)  + open_sent_value]);
+			while (index < N) {
+				open_sent_value =  view(a[index]);
+				closing_sent_value =  view(a[index+ sizeof(int)  + open_sent_value]);
 				//cout << endl << "open sent value is " << open_sent_value ;
 				//cout << endl << "close sent value is " << closing_sent_value << endl; 
 				if (open_sent_value != closing_sent_value)
 					return false;
 
-				num_locations = num_locations + 2 * sizeof(value_type) + open_sent_value; 
-				//cout << endl << "num _location is " << num_locations;
+				index = index + 2 * sizeof(int) + open_sent_value; 
+				//cout << endl << "num _location is " << index;
 
 			}
             return true;}
@@ -142,6 +142,7 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
+			/*
 			int index = 0;
 			int sentinel_value, space_needed;
 			while (index < N )  {	// lookup until the end of the array
@@ -149,7 +150,11 @@ class Allocator {
 				space_needed = n * sizeof(value_type) + 2*sizeof(int);  // sentinel size factor in the space needed
 				if (sentinel_value >= space_needed) {
 					view(a[index]) = -1 * n* sizeof (value_type);    
-					          
+					view(a[index + space_needed - sizeof(int)] = -1 * n * sizeof(value_type);
+					return &a[index];
+				}
+				index += 2* 
+			*/					          
 
 			assert(valid());
             return 0;}                   // replace!
