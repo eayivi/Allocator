@@ -118,6 +118,7 @@ class Allocator {
             // <your code>
 		    view(a[0]) = N- 2* sizeof(int);
 			view(a[N-sizeof(int)]) = N- 2* sizeof(int);
+			assert(valid());
 		}
 		
 
@@ -141,7 +142,14 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
-            
+			int index = 0;
+			int sentinel_value, space_needed;
+			while (index < N )  {	// lookup until the end of the array
+				sentinel_value = view(a[index]);
+				space_needed = n * sizeof(value_type) + 2*sizeof(int);  // sentinel size factor in the space needed
+				if (sentinel_value >= space_needed) {
+					view(a[index]) = -1 * n* sizeof (value_type);    
+					          
 
 			assert(valid());
             return 0;}                   // replace!
