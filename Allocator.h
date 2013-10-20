@@ -156,10 +156,13 @@ class Allocator {
             sentinel_value = view(a[index]);
                 
             if (sentinel_value >= space_needed) {   // found a spot
-
+                
+              cout << endl << "$$Found a spot at index " << index << " , which shows " << sentinel_value ;
+              cout << " available, we need " << space_needed << ", including sentinels" ;
               if (sentinel_value > (space_needed + (signed) 2 * sizeof(int))) {  // Enough space leftover for a future block?
                  view(a[index+ sizeof(int) + sentinel_value]) -= space_needed ;  // set leftover space's end sentinel
                  view(a[index+ space_needed]) = view(a[index+ sizeof(int) + sentinel_value]); //set its beginning's sentinel 
+                 cout << endl << "There was more space than needed, so we set the next sentinels" << endl;
               }
                     
               view(a[index]) = -1 * n* sizeof (value_type);       //update the space found 
