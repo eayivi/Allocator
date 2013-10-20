@@ -74,7 +74,7 @@ class Allocator {
 			int open_sent_value, closing_sent_value;			
 			while (num_locations < N) {
 				open_sent_value =  view(a[num_locations]);
-				closing_sent_value =  view(a[num_locations+ 4  + open_sent_value]);
+				closing_sent_value =  view(a[num_locations+ sizeof(int)  + open_sent_value]);
 				//cout << endl << "open sent value is " << open_sent_value ;
 				//cout << endl << "close sent value is " << closing_sent_value << endl; 
 				if (open_sent_value != closing_sent_value)
@@ -116,8 +116,8 @@ class Allocator {
          */
         Allocator () {
             // <your code>
-		    view(a[0]) = N-8;
-			view(a[N-4]) = N-8;
+		    view(a[0]) = N- 2* sizeof(int);
+			view(a[N-sizeof(int)]) = N- 2* sizeof(int);
 		}
 		
 
@@ -141,8 +141,9 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
-            assert(valid());
-			//assert (true);
+            
+
+			assert(valid());
             return 0;}                   // replace!
 
         // ---------
