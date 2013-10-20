@@ -72,6 +72,7 @@ class Allocator {
             // <your code>
             return true;}
 
+		
     public:
         // ------------
         // constructors
@@ -84,12 +85,28 @@ class Allocator {
          */
         Allocator () {
             // <your code>
+						
             assert(valid());}
+		
 
         // Default copy, destructor, and copy assignment
         // Allocator  (const Allocator&);
         // ~Allocator ();
         // Allocator& operator = (const Allocator&);
+        
+		// ------------
+        // constructors
+        // ------------
+
+        /**
+         * O(1) in space
+         * O(1) in time
+         * <your documentation>
+         */
+
+		int& view (char& c) {
+			return *reinterpret_cast<int*>(&c); }
+
 
         // --------
         // allocate
