@@ -14,7 +14,7 @@
 #include <cassert> // assert
 #include <cstddef> // ptrdiff_t, size_t
 #include <new>     // new
-
+using namespace std;
 // ---------
 // Allocator
 // ---------
@@ -70,9 +70,40 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
+			int num_locations = 0; // The beginning index of the open sentinel
+			int open_sent_value, closing_sent_value;			
+			while (num_locations < N) {
+				open_sent_value =  view(a[num_locations]);
+				closing_sent_value =  view(a[num_locations+ 4  + open_sent_value]);
+				//cout << endl << "open sent value is " << open_sent_value ;
+				//cout << endl << "close sent value is " << closing_sent_value << endl; 
+				if (open_sent_value != closing_sent_value)
+					return false;
+
+				num_locations = num_locations + 2 * sizeof(value_type) + open_sent_value; 
+				//cout << endl << "num _location is " << num_locations;
+
+			}
             return true;}
 
+		// ------------
+        // View 
+        // ------------
+
+        /**
+         * O(1) in space
+         * O(1) in time
+         * <your documentation>
+         */
+
+		int& view (char& c) const {
+			return *reinterpret_cast<int*>(&c); }
 		
+		int view (const char& c) const {
+		return *reinterpret_cast<const int*>(&c); }
+
+
+
     public:
         // ------------
         // constructors
@@ -85,8 +116,9 @@ class Allocator {
          */
         Allocator () {
             // <your code>
-						
-            assert(valid());}
+		    view(a[0]) = N-8;
+			view(a[N-4]) = N-8;
+		}
 		
 
         // Default copy, destructor, and copy assignment
@@ -94,19 +126,6 @@ class Allocator {
         // ~Allocator ();
         // Allocator& operator = (const Allocator&);
         
-		// ------------
-        // constructors
-        // ------------
-
-        /**
-         * O(1) in space
-         * O(1) in time
-         * <your documentation>
-         */
-
-		int& view (char& c) {
-			return *reinterpret_cast<int*>(&c); }
-
 
         // --------
         // allocate
@@ -123,6 +142,7 @@ class Allocator {
         pointer allocate (size_type n) {
             // <your code>
             assert(valid());
+			//assert (true);
             return 0;}                   // replace!
 
         // ---------

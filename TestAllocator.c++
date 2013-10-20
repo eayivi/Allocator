@@ -56,7 +56,8 @@ typedef testing::Types<
             std::allocator<int>,
             std::allocator<double>,
             Allocator<int, 100>,
-            Allocator<double, 100> >
+            Allocator<double, 100>
+									 >
         my_types;
 
 TYPED_TEST_CASE(TestAllocator, my_types);
