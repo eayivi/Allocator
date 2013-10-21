@@ -107,7 +107,7 @@ TYPED_TEST(TestAllocator, Ten) {
             x.destroy(e);}
         x.deallocate(b, s);}}
 
-TYPED_TEST(TestAllocator, leftshot) {	// fill the array
+TYPED_TEST(TestAllocator, bubonic_plague) {	// fill the array
     typedef typename TestFixture::allocator_type  allocator_type;
     typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
