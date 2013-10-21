@@ -106,3 +106,33 @@ TYPED_TEST(TestAllocator, Ten) {
             --e;
             x.destroy(e);}
         x.deallocate(b, s);}}
+
+TYPED_TEST(TestAllocator, leftshot) {	// fill the array
+    typedef typename TestFixture::allocator_type  allocator_type;
+    typedef typename TestFixture::value_type      value_type;
+    typedef typename TestFixture::difference_type difference_type;
+    typedef typename TestFixture::pointer         pointer;
+
+    allocator_type x;
+    const difference_type s = 92/sizeof(value_type);
+    const value_type      v = 2;
+	//std::cout << endl << "s is " << s;
+    const pointer         b = x.allocate(s);
+    if (b != 0) {
+        pointer e = b + s;
+        pointer p = b;
+        try {
+            while (p != e) {
+                x.construct(p, v);
+                ++p;}}
+        catch (...) {
+            while (b != p) {
+                --p;
+                x.destroy(p);}
+            x.deallocate(b, s);
+            throw;}
+        ASSERT_EQ(s, std::count(b, e, v));
+        while (b != e) {
+            --e;
+            x.destroy(e);}
+        x.deallocate(b, s);}}
