@@ -14,7 +14,8 @@
 #include <cassert> // assert
 #include <cstddef> // ptrdiff_t, size_t
 #include <new>     // new
-#include <cmath>    // abs
+//#include <cmath>    // abs
+
 using namespace std;
 // ---------
 // Allocator
@@ -197,12 +198,25 @@ class Allocator {
 
         /**
          * O(1) in space
-         * O(1) in time
+         * (1) in time
          * <your documentation>
          * after deallocation adjacent free blocks must be coalesced
          */
         void deallocate (pointer p, size_type) {
             // <your code>
+			assert(valid());
+			char * char_ptr_p = reinterpret_cast<char*>(p);
+			int old_sentinel_value = view(*(char_ptr_p - sizeof(int)));
+			
+			//cout << endl << "In deallocate, previous sentinel is " << old_sentinel_value;
+			//cout << " matching sentinel is " << view(*(char_ptr_p + abs(old_sentinel_value))) << endl;
+			
+			assert ( view(*(char_ptr_p + abs(old_sentinel_value)))== old_sentinel_value);
+			//view(*(char_ptr_p - sizeof(int))) = -1* view(*(char_ptr_p - sizeof(int)));
+			
+			//if (char_ptr_p - 4 == a) {
+				
+			//}						
             assert(valid());}
 
         // -------
