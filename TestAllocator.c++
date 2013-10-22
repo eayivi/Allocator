@@ -150,7 +150,7 @@ TYPED_TEST(TestAllocator, bubonic_plague) {	// fill the array
             x.destroy(e);}
         x.deallocate(b, s);}}
 
-TYPED_TEST(TestAllocator, chimera) { // test coallesce
+TYPED_TEST(TestAllocator, chimera) { // test multiple allocations 
     typedef typename TestFixture::allocator_type  allocator_type;
     typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
@@ -170,3 +170,21 @@ TYPED_TEST(TestAllocator, chimera) { // test coallesce
             }
     } 
  }
+
+TYPED_TEST(TestAllocator, medusa) { // tests allocation with null parameters
+    typedef typename TestFixture::allocator_type  allocator_type;
+    typedef typename TestFixture::value_type      value_type;
+    typedef typename TestFixture::difference_type difference_type;
+    typedef typename TestFixture::pointer         pointer;
+    allocator_type x;
+    //const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
+
+    //string parameter = test_info->type_param(); 
+    //cout << parameter         
+    try {
+		x.deallocate(x.allocate(0), 5);
+        }
+    catch(std::bad_alloc&){
+        ASSERT_FALSE(true);
+    }
+}

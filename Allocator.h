@@ -150,7 +150,9 @@ class Allocator {
             // <your code>
           //cout << endl << "$$$$$In allocate" << endl;
           //cout << "allocating " << n << " elements" << endl;
-          int index = 0;
+          
+		  if (n<=0) return 0;	
+		  int index = 0;
           int sentinel_value, space_needed;           
           //space_needed = n * sizeof(value_type) + 2*sizeof(int);  // we need to fit a couple sentinels in new block
           space_needed = n * sizeof(value_type) ; // we need not fit a couple sentinels in new block
@@ -212,7 +214,7 @@ class Allocator {
         void deallocate (pointer p, size_type) {
             // <your code>
 			
-			if (p == 0) return;
+			if (p <= 0) return;
 			
 			assert(valid());
 			char * char_ptr_p = reinterpret_cast<char*>(p);     // Casting a pointer to value_type, into a char *
