@@ -36,7 +36,6 @@ To test the program:
 #include "gtest/gtest.h"
 
 #include "Allocator.h"
-#include <regex>  // regex, to parse parameter list
 
 // -------------
 // TestAllocator
@@ -177,14 +176,25 @@ TYPED_TEST(TestAllocator, medusa) { // tests allocation with null parameters
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
     allocator_type x;
-    //const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
-
-    //string parameter = test_info->type_param(); 
-    //cout << parameter         
-    try {
+     try {
 		x.deallocate(x.allocate(0), 5);
         }
     catch(std::bad_alloc&){
         ASSERT_FALSE(true);
     }
+}
+
+TYPED_TEST(TestAllocator, minotaur) { // tests construction 
+
+    typedef typename TestFixture::allocator_type  allocator_type;
+    typedef typename TestFixture::value_type      value_type;
+    typedef typename TestFixture::difference_type difference_type;
+    typedef typename TestFixture::pointer         pointer;
+    allocator_type x;
+       try {
+        allocator_type x;
+      }
+      catch (...) {
+        ASSERT_FALSE(true);
+      }
 }
