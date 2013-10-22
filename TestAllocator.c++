@@ -102,7 +102,7 @@ TYPED_TEST_CASE(TestAllocator, my_types);
 
 TYPED_TEST_CASE(TestMyAllocator, other_types);
 
-TYPED_TEST(TestAllocator, One) {
+TYPED_TEST(TestAllocator, Ebola) {
     typedef typename TestFixture::allocator_type  allocator_type;
     typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
@@ -118,7 +118,7 @@ TYPED_TEST(TestAllocator, One) {
         x.destroy(p);
         x.deallocate(p, s);}}
 
-TYPED_TEST(TestAllocator, Ten) {
+TYPED_TEST(TestAllocator, MangeFever) {
     typedef typename TestFixture::allocator_type  allocator_type;
     typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
@@ -227,11 +227,11 @@ TYPED_TEST(TestAllocator, apocalypse) { // tests construction
 	pointer p;
 	std::vector<pointer> pointer_vector;
 	int i = 215;
-	while ( ((p = x.allocate(2))!= 0) && (i++ < 215)) {
+	while ( (i++ <= 215) && ((p = x.allocate(1))!= 0) ) {
 		pointer_vector.push_back(p);
 	}
-	while (pointer_vector.size() > 0){
-		x.deallocate(pointer_vector.back(),2);
+	while (pointer_vector.size() != 0){
+		x.deallocate(pointer_vector.back(),1);
 		pointer_vector.pop_back();
 	}
 }
