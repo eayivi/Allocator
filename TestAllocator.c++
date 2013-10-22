@@ -190,7 +190,6 @@ TYPED_TEST(TestAllocator, minotaur) { // tests construction
     typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
-    allocator_type x;
        try {
         allocator_type x;
       }
