@@ -161,12 +161,7 @@ TYPED_TEST(TestAllocator, chimera) { // test multiple allocations
 	//string parameter = test_info->type_param(); 
 	//cout << parameter 		
 	for (int i = 1; i < s; ++i) {
-            try {
-                x.deallocate(x.allocate(i), i);
-            }
-            catch(std::bad_alloc&){
-				ASSERT_FALSE(true);
-            }
+		 x.deallocate(x.allocate(i), i);
     } 
  }
 
@@ -176,12 +171,7 @@ TYPED_TEST(TestAllocator, medusa) { // tests allocation with null parameters
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
     allocator_type x;
-     try {
 		x.deallocate(x.allocate(0), 5);
-        }
-    catch(std::bad_alloc&){
-        ASSERT_FALSE(true);
-    }
 }
 
 TYPED_TEST(TestAllocator, minotaur) { // tests construction 
