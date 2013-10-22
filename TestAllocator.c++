@@ -193,7 +193,7 @@ TYPED_TEST(TestAllocator, chimera) { // test multiple allocations
 		 x.deallocate(x.allocate(i), i);
     } 
  }
-
+/*
 TYPED_TEST(TestAllocator, medusa) { // tests allocation with null parameters
     typedef typename TestFixture::allocator_type  allocator_type;
     typedef typename TestFixture::value_type      value_type;
@@ -202,7 +202,7 @@ TYPED_TEST(TestAllocator, medusa) { // tests allocation with null parameters
     allocator_type x;
 		x.deallocate(x.allocate(0), 5);
 }
-
+*/
 TYPED_TEST(TestAllocator, minotaur) { // tests construction 
 
     typedef typename TestFixture::allocator_type  allocator_type;
