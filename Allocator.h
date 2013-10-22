@@ -211,6 +211,9 @@ class Allocator {
          */
         void deallocate (pointer p, size_type) {
             // <your code>
+			
+			if (p == 0) return;
+			
 			assert(valid());
 			char * char_ptr_p = reinterpret_cast<char*>(p);     // Casting a pointer to value_type, into a char *
 			char * left_sentinel = (char_ptr_p - sizeof(int));					// address of beginning of left sentinel

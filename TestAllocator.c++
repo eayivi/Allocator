@@ -36,6 +36,7 @@ To test the program:
 #include "gtest/gtest.h"
 
 #include "Allocator.h"
+#include <regex>  // regex, to parse parameter list
 
 // -------------
 // TestAllocator
@@ -55,8 +56,19 @@ struct TestAllocator : testing::Test {
 typedef testing::Types<
             std::allocator<int>,
             std::allocator<double>,
+			std::allocator<char>,
+            
             Allocator<int, 100>,
-            Allocator<double, 100>
+            Allocator<double, 100>,
+			Allocator<char, 100>,
+			
+            Allocator<int, 99>,
+			Allocator<double, 99>,
+			Allocator<char, 99>,
+
+			Allocator<int, 11>,
+			Allocator<double,15>,
+			Allocator<char, 9>
 									 >
         my_types;
 
@@ -113,6 +125,7 @@ TYPED_TEST(TestAllocator, bubonic_plague) {	// fill the array
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
 
+
     allocator_type x;
     const difference_type s = 92/sizeof(value_type);
     const value_type      v = 2;
@@ -136,3 +149,24 @@ TYPED_TEST(TestAllocator, bubonic_plague) {	// fill the array
             --e;
             x.destroy(e);}
         x.deallocate(b, s);}}
+
+TYPED_TEST(TestAllocator, chimera) { // test coallesce
+    typedef typename TestFixture::allocator_type  allocator_type;
+    typedef typename TestFixture::value_type      value_type;
+    typedef typename TestFixture::difference_type difference_type;
+    typedef typename TestFixture::pointer         pointer;
+    allocator_type x;
+    const difference_type s = 92/sizeof(value_type);
+	//const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
+	
+	//string parameter = test_info->type_param(); 
+	//cout << parameter 		
+	for (int i = 1; i < s; ++i) {
+            try {
+                x.deallocate(x.allocate(i), i);
+            }
+            catch(std::bad_alloc&){
+				ASSERT_FALSE(true);
+            }
+    } 
+ }
