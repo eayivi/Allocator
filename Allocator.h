@@ -15,6 +15,11 @@
 #include <cstddef> // ptrdiff_t, size_t
 #include <new>     // new
 //#include <cmath>    // abs
+#define DISABLE_PRINTF
+
+#ifdef DISABLE_PRINTF
+    #define printf(fmt, ...) (0)
+#endif
 
 using namespace std;
 // ---------
@@ -184,7 +189,6 @@ class Allocator {
             assert (valid());
             index += 2*sizeof(int) + abs(sentinel_value);
           }
-
           assert(valid());
           return 0;}                   // replace!
 

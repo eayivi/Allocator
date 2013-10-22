@@ -112,6 +112,7 @@ TYPED_TEST(TestAllocator, Ebola) {
     const difference_type s = 1;
     const value_type      v = 2;
     const pointer         p = x.allocate(s);
+    printf("%p", p);   
     if (p != 0) {
         x.construct(p, v);
         ASSERT_EQ(v, *p);
