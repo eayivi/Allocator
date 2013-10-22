@@ -149,7 +149,7 @@ class Allocator {
         pointer allocate (size_type n) {
             // <your code>
           //cout << endl << "$$$$$In allocate" << endl;
-          cout << "allocating " << n << " elements" << endl;
+          //cout << "allocating " << n << " elements" << endl;
           int index = 0;
           int sentinel_value, space_needed;           
           //space_needed = n * sizeof(value_type) + 2*sizeof(int);  // we need to fit a couple sentinels in new block
@@ -219,8 +219,8 @@ class Allocator {
 			assert ( view(*right_sentinel) < 0);
 			int new_sentinel_value = -1 * view(*left_sentinel);		
 			
-			cout << endl << "In deallocate, previous sentinel is " << view(*left_sentinel);
-			cout << " matching sentinel is " << view(*right_sentinel) << endl;
+			//cout << endl << "In deallocate, previous sentinel is " << view(*left_sentinel);
+			//cout << " matching sentinel is " << view(*right_sentinel) << endl;
 						
 			view(*left_sentinel) = new_sentinel_value;
 			view(*right_sentinel) = new_sentinel_value; 
@@ -231,17 +231,17 @@ class Allocator {
 			
 
 			if ( (left_sentinel  == a) && ((right_sentinel + sizeof(int))  == (N+a)))  {
-				// cout << endl << "full space alloc'ed";   // Entire space deallocated, no further actions necessary
+				//cout << endl << "Full space alloc'ed" << endl;   // Entire space deallocated, no further actions necessary
 			}else if ( left_sentinel == a) {				// Space deallocated start at beginning of array, but stop in middle
 				if ( view(*(right_sentinel + sizeof(int))) > 0 ) {   // adjacent block on the right is positive
-					cout << endl << "Coalescing with right neighbor, no left neighbor..." ;
+					//cout << endl << "Coalescing with right neighbor, no left neighbor..." ;
 					coalesce (left_sentinel, right_sentinel + sizeof(int));
 					assert(valid());
 				} 
 			}else if ((right_sentinel + sizeof(int))  == (N+a) ) {		// Space deallocated ends at end of array, but part
 				int neighbor_value = view(*(left_sentinel - sizeof(int)));
 				if ( neighbor_value > 0 ) {
-					cout << endl << "Coalescing with left neighbor, no right neighbor...";
+					//cout << endl << "Coalescing with left neighbor, no right neighbor...";
 					coalesce (left_sentinel - 2* sizeof(int) - abs(neighbor_value), left_sentinel);
 					assert(valid());
 				} 
@@ -250,16 +250,15 @@ class Allocator {
 				int left_neighbor_value = view(*(left_sentinel - sizeof(int)));
 					
 				if (right_neighbor_value > 0 && left_neighbor_value > 0 ) {
-					cout << endl << "Coalescing with left and right neighbors... " << endl;
+					//cout << endl << "Coalescing with left and right neighbors... " << endl;
 					coalesce(left_sentinel - 2* sizeof(int) - abs(left_neighbor_value), left_sentinel, right_sentinel + sizeof(int));
 				
 				} else if (right_neighbor_value > 0 ) {
-					cout << endl << "Coalescing with right neighbor... " << endl;
+					//cout << endl << "Coalescing with right neighbor... " << endl;
 					coalesce(left_sentinel,right_sentinel + sizeof(int));
 				
 				} else if (left_neighbor_value >0 ) {
-					cout << endl << "Coalescing with left neighbor... " << endl;
-					coalesce (left_sentinel - 2* sizeof(int) - abs(left_neighbor_value), left_sentinel);
+
 				} 				
 			} 						
             assert(valid());}
@@ -277,7 +276,7 @@ class Allocator {
 		void coalesce (char* beg_p, char* beg_q) {
 			int updated_size = view(*beg_p) + view(*beg_q) + 2* sizeof(int);
 			int old_left_sent= view (*beg_q);
-			cout << endl << "coalescing to size " << updated_size << endl;
+			//cout << endl << "coalescing to size " << updated_size << endl;
 			
 			// updating left-most sentinel
 			view( *beg_p) = updated_size;
@@ -291,7 +290,7 @@ class Allocator {
 		void coalesce (char* beg_p, char* beg_q, char* beg_r) {
 			int updated_size = view(*beg_p) + view(*beg_q) + view(*beg_r) + 4 *sizeof(int) ;
 			int r_old_sent_value = view(*beg_r);
-			cout << endl << "coalescing to size " << updated_size << endl;
+			//cout << endl << "coalescing to size " << updated_size << endl;
 			
 			//updating left-most sentinel
 			view( *beg_p) = updated_size;
