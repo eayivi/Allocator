@@ -17,10 +17,6 @@
 //#include <cmath>    // abs
 #define DISABLE_PRINTF
 
-#ifdef DISABLE_PRINTF
-    #define printf(fmt, ...) (0)
-#endif
-
 using namespace std;
 // ---------
 // Allocator
