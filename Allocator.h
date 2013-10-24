@@ -15,7 +15,6 @@
 #include <cstddef> // ptrdiff_t, size_t
 #include <new>     // new
 //#include <cmath>    // abs
-#define DISABLE_PRINTF
 
 using namespace std;
 // ---------
