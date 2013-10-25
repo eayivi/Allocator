@@ -122,7 +122,8 @@ class Allocator {
          */
         Allocator () {
             // <your code>
-            view(a[0]) = N- 2* sizeof(int);
+            if (N < 2* sizeof(int)) throw bad_alloc ();
+			view(a[0]) = N- 2* sizeof(int);
             view(a[N-sizeof(int)]) = N- 2* sizeof(int);
             assert(valid());
         }
@@ -221,7 +222,7 @@ class Allocator {
 			char * right_sentinel = (char_ptr_p + abs(view(*left_sentinel)));    
 			assert ( view(*right_sentinel) == view(*left_sentinel));		// sanity check
 			assert ( view(*right_sentinel) < 0);
-			int new_sentinel_value = -1 * view(*left_sentinel);		
+			int new_sentinel_value =  abs( view(*left_sentinel));		
 			
 			//cout << endl << "In deallocate, previous sentinel is " << view(*left_sentinel);
 			//cout << " matching sentinel is " << view(*right_sentinel) << endl;
