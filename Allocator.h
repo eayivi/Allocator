@@ -72,24 +72,18 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
-            //cout << endl << "Checking block validity, standby..." ;
             int index = 0; // The beginning index of the open sentinel
             int open_sent_value, closing_sent_value;            
             while (index < N) {
                 assert (index>=0);
-                //cout << endl << "Index is " << index;
 				open_sent_value =  view(a[index]);
                 closing_sent_value =  view(a[index+ sizeof(int)  + abs(open_sent_value)]);
-                //cout << endl << "opening_sentinel value is " << open_sent_value ;
-                //cout << ", closing_sentinel value is " << closing_sent_value << endl; 
                 if (open_sent_value != closing_sent_value)
                     return false;
 
                 index = index + 2 * sizeof(int) + abs(open_sent_value); 
-                //cout << "num _location is " << index;
 
             }
-            //cout << endl << "$$Exiting valid() " << endl;
             return true;}
 
         // ------------
@@ -149,13 +143,10 @@ class Allocator {
          */
         pointer allocate (size_type n) {
             // <your code>
-          //cout << endl << "$$$$$In allocate" << endl;
-          //cout << "allocating " << n << " elements" << endl;
           
 		  if (n<=0 || n >=N) return 0;	
 		  int index = 0;
           int sentinel_value, space_needed;           
-          //space_needed = n * sizeof(value_type) + 2*sizeof(int);  // we need to fit a couple sentinels in new block
           space_needed = n * sizeof(value_type) ; // we need not fit a couple sentinels in new block
             
           while (index < N )  {   // looking up space until the end of the array
@@ -163,13 +154,8 @@ class Allocator {
                 
             if (sentinel_value > (signed)(space_needed +2*sizeof(int)) ) {   // found a spot, enough space leftover for another block
                 
-              //cout << endl << "$$Found a spot at index " << index << " , which shows " << sentinel_value ;
-              //cout << " available, we need " << space_needed << ", excluding sentinels" ;
-			  //cout << endl << "index of leftover's last sentinel is " << index+ sizeof(int) + sentinel_value;
               view(a[index+ sizeof(int) + sentinel_value]) -= (space_needed+2*sizeof(int)) ;  // set remain space's end sentinel
-			  //cout << endl << "index of leftover's first sentinel is " << index+ sizeof(int) + space_needed;
 			  view(a[index+ 2*sizeof(int) + space_needed]) = view(a[index+ sizeof(int) + sentinel_value]); //set its beginning's sentnel 
-                 //cout << endl << "There was more space than needed, so we set the next sentinels" << endl;
               
 		      view(a[index]) = -1 * space_needed; //update the space found 
 			  view(a[index + space_needed + sizeof(int)]) = -1 * space_needed;
@@ -224,29 +210,19 @@ class Allocator {
 			assert ( view(*right_sentinel) < 0);
 			int new_sentinel_value =  abs( view(*left_sentinel));		
 			
-			//cout << endl << "In deallocate, previous sentinel is " << view(*left_sentinel);
-			//cout << " matching sentinel is " << view(*right_sentinel) << endl;
-						
 			view(*left_sentinel) = new_sentinel_value;
 			view(*right_sentinel) = new_sentinel_value; 
-		    //cout << "value left of sentinel is"  << static_cast<void *> (left_sentinel );
-		    //cout << endl << "value of a is " << static_cast<void *> (a) ;
-			//cout << "value right  of sentinel is"  << static_cast<void *> (right_sentinel + sizeof(int) );
-		    //cout << endl << "value of a is " << static_cast<void *> (a) ;
-			
 
 			if ( (left_sentinel  == a) && ((right_sentinel + sizeof(int))  == (N+a)))  {
-				//cout << endl << "Full space alloc'ed" << endl;   // Entire space deallocated, no further actions necessary
+				// Entire space deallocated, no further actions necessary
 			}else if ( left_sentinel == a) {				// Space deallocated start at beginning of array, but stop in middle
 				if ( view(*(right_sentinel + sizeof(int))) > 0 ) {   // adjacent block on the right is positive
-					//cout << endl << "Coalescing with right neighbor, no left neighbor..." ;
 					coalesce (left_sentinel, right_sentinel + sizeof(int));
 					assert(valid());
 				} 
 			}else if ((right_sentinel + sizeof(int))  == (N+a) ) {		// Space deallocated ends at end of array, but part
 				int neighbor_value = view(*(left_sentinel - sizeof(int)));
 				if ( neighbor_value > 0 ) {
-					//cout << endl << "Coalescing with left neighbor, no right neighbor...";
 					coalesce (left_sentinel - 2* sizeof(int) - abs(neighbor_value), left_sentinel);
 					assert(valid());
 				} 
@@ -255,11 +231,10 @@ class Allocator {
 				int left_neighbor_value = view(*(left_sentinel - sizeof(int)));
 					
 				if (right_neighbor_value > 0 && left_neighbor_value > 0 ) {
-					//cout << endl << "Coalescing with left and right neighbors... " << endl;
 					coalesce(left_sentinel - 2* sizeof(int) - abs(left_neighbor_value), left_sentinel, right_sentinel + sizeof(int));
 				
 				} else if (right_neighbor_value > 0 ) {
-					//cout << endl << "Coalescing with right neighbor... " << endl;
+					
 					coalesce(left_sentinel,right_sentinel + sizeof(int));
 				
 				} else if (left_neighbor_value >0 ) {
@@ -295,7 +270,6 @@ class Allocator {
 		void coalesce (char* beg_p, char* beg_q, char* beg_r) {
 			int updated_size = view(*beg_p) + view(*beg_q) + view(*beg_r) + 4 *sizeof(int) ;
 			int r_old_sent_value = view(*beg_r);
-			//cout << endl << "coalescing to size " << updated_size << endl;
 			
 			//updating left-most sentinel
 			view( *beg_p) = updated_size;
