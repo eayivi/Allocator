@@ -68,7 +68,7 @@ class Allocator {
         /**
          * O(1) in space
          * O(n) in time
-         * <your documentation>
+         * valid takes no argument, it walks through the array and ensure that the sentinel matches pairwise.
          */
         bool valid () const {
             // <your code>
@@ -89,11 +89,11 @@ class Allocator {
         // ------------
         // View 
         // ------------
-
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param c a char by reference
+		 * @return the value at the address of the char (i.e. the sentinel value)
          */
 
         int& view (char& c) const {
@@ -112,7 +112,7 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * Default constructor takes no argument but throws exception if there is not enough space to construct
          */
         Allocator () {
             // <your code>
@@ -181,7 +181,8 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param p a pointer to the location where construction starts
+		 * @param v a value to put in that location
          */
         void construct (pointer p, const_reference v) {
             new (p) T(v);                               // this is correct and exempt
@@ -194,7 +195,7 @@ class Allocator {
         /**
          * O(1) in space
          * (1) in time
-         * <your documentation>
+         * @param p a pointer to the beginning of the area to be deallocated
          * after deallocation adjacent free blocks must be coalesced
          */
         void deallocate (pointer p, size_type) {
@@ -244,13 +245,14 @@ class Allocator {
             assert(valid());}
 		
 		// ---------
-		// coaslesce
+		// coalesce
 		//---------
 		/**
 		*
 		* coalesce two or three adjacent locations, the order of argument matters 
 		* beg_p points to the beginning of the first location
 		* beg_q points to the beginning of the second location
+		* an overriden version of coalesce takes a third argument, beginning of third location
 		*/
 		
 		void coalesce (char* beg_p, char* beg_q) {
